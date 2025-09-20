@@ -1,0 +1,23 @@
+name: Feature
+title: "feat(<área>): <acción/resultado>"
+labels: ["type:feat"]
+---
+## Objetivo
+(1 frase medible orientada a usuario)
+
+## DoR
+- [ ] Aceptación clara
+- [ ] Test mínimo definido
+- [ ] Rollback simple
+
+## DoD
+- [ ] Tests pasando
+- [ ] Docs 3 líneas en README
+- [ ] Demo (gif o link)
+- [ ] Deploy verificado
+
+## Criterios de aceptación
+- [ ] ...
+
+## Test
+Descripción del test mínimo.
