@@ -1,15 +1,11 @@
-## Qué hace
-Breve resumen
+## Qué
+<!-- breve resumen -->
 
-## Evidencia
-- [ ] Gif 10–30s
-- [ ] URL temporal/local
+## Cómo
+<!-- cambios principales, módulos, migraciones -->
 
-## Checklist DoD
-- [ ] Tests ok
-- [ ] Docs mínimas
-- [ ] Linter/Typecheck
-- [ ] Deploy/preview verificado
-
-## Riesgos y rollback
-Comando/PR a revertir
+## Checklist
+- [ ] linked a issue #
+- [ ] tests pasan (`pnpm -r test`)
+- [ ] demo/GIF
+- [ ] etiqueta semver (fix/feat/chore)

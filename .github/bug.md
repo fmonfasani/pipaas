@@ -1,14 +1,22 @@
-name: Bug
-labels: ["type:bug","prio:P0"]
 ---
-## Repro
-Pasos exactos
+name: "🐞 Bug"
+labels: ["type:bug","prio:P1"]
+---
+### Qué pasa
+<!-- describí el bug -->
 
-## Esperado vs Actual
-...
+### Cómo reproducir
+1. …
+2. …
 
-## Fix scope
-(≤1 archivo o ≤90min)
+### Esperado
+…
 
-## Test
-Caso que cubre el bug
+### Contexto
+- URL/Entorno:
+- Logs:
+
+### DoD
+- [ ] test que lo cubre
+- [ ] GIF/imagen
+- [ ] nota de changelog

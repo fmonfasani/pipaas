@@ -1,3 +1,4 @@
+# .github/workflows/project-auto-add.yml
 name: Project · Auto add + set fields
 on:
   issues:
@@ -7,17 +8,17 @@ jobs:
   add_and_set:
     runs-on: ubuntu-latest
     permissions:
-      issues: read
       contents: read
+      issues: read
       pull-requests: read
-      project: write
+      projects: write   
+
     steps:
       - name: Set constants
         id: c
         run: |
           echo "ORG=pipaas-com" >> $GITHUB_OUTPUT
           echo "PROJECT_NUMBER=1" >> $GITHUB_OUTPUT
-          # IDs reales de TU project (ya confirmados)
           echo "FIELD_STATUS=PVTSSF_lADODeqXx84BDnadzg1e4jU" >> $GITHUB_OUTPUT
           echo "OPT_TODO=f75ad846" >> $GITHUB_OUTPUT
           echo "FIELD_PRIORITY=PVTSSF_lADODeqXx84BDnadzg1e4qU" >> $GITHUB_OUTPUT
@@ -35,42 +36,24 @@ jobs:
             const OPT_P1 = "${{ steps.c.outputs.OPT_P1 }}";
             const issueNodeId = context.payload.issue.node_id;
 
-            // 1) projectId
-            const q1 = await github.graphql(`
-              query($org:String!, $num:Int!){
-                organization(login:$org){ projectV2(number:$num){ id } }
-              }`,
-              { org: ORG, num: PROJECT_NUMBER }
-            );
-            const projectId = q1.organization.projectV2.id;
+            const { organization: { projectV2: { id: projectId } } } =
+              await github.graphql(`query($org:String!,$num:Int!){
+                organization(login:$org){ projectV2(number:$num){ id } }}`,
+                { org: ORG, num: PROJECT_NUMBER });
 
-            // 2) add item
-            const mAdd = await github.graphql(`
-              mutation($project:ID!, $content:ID!){
-                addProjectV2ItemById(input:{ projectId:$project, contentId:$content }){
-                  item{ id }
-                }
-              }`,
-              { project: projectId, content: issueNodeId }
-            );
-            const itemId = mAdd.addProjectV2ItemById.item.id;
+            const { addProjectV2ItemById: { item: { id: itemId } } } =
+              await github.graphql(`mutation($project:ID!,$content:ID!){
+                addProjectV2ItemById(input:{projectId:$project,contentId:$content}){ item{ id } }}`,
+                { project: projectId, content: issueNodeId });
 
-            // 3) set Status = Todo
-            await github.graphql(`
-              mutation($p:ID!,$i:ID!,$f:ID!,$opt:String!){
-                updateProjectV2ItemFieldValue(input:{
-                  projectId:$p, itemId:$i, fieldId:$f,
-                  value:{ singleSelectOptionId:$opt }
-                }){ clientMutationId }
-              }`, { p: projectId, i: itemId, f: FIELD_STATUS, opt: OPT_TODO }
-            );
+            // Status = Todo
+            await github.graphql(`mutation($p:ID!,$i:ID!,$f:ID!,$o:String!){
+              updateProjectV2ItemFieldValue(input:{projectId:$p,itemId:$i,fieldId:$f,
+                value:{singleSelectOptionId:$o}}){ clientMutationId }}`,
+              { p: projectId, i: itemId, f: FIELD_STATUS, o: OPT_TODO });
 
-            // 4) set Priority = P1
-            await github.graphql(`
-              mutation($p:ID!,$i:ID!,$f:ID!,$opt:String!){
-                updateProjectV2ItemFieldValue(input:{
-                  projectId:$p, itemId:$i, fieldId:$f,
-                  value:{ singleSelectOptionId:$opt }
-                }){ clientMutationId }
-              }`, { p: projectId, i: itemId, f: FIELD_PRIORITY, opt: OPT_P1 }
-            );
+            // Priority = P1
+            await github.graphql(`mutation($p:ID!,$i:ID!,$f:ID!,$o:String!){
+              updateProjectV2ItemFieldValue(input:{projectId:$p,itemId:$i,fieldId:$f,
+                value:{singleSelectOptionId:$o}}){ clientMutationId }}`,
+              { p: projectId, i: itemId, f: FIELD_PRIORITY, o: OPT_P1 });
