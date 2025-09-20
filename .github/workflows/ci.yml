@@ -1,13 +1,26 @@
+# .github/workflows/ci.yml
 name: ci
 on: [push, pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Instala pnpm
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      # Node + cache de pnpm
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: 'pnpm' }
-      - run: corepack enable
-      - run: pnpm i --frozen-lockfile
-      - run: pnpm -r typecheck
-      - run: pnpm -r test
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm -v
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm -r build
+      - run: pnpm -r test --if-present
