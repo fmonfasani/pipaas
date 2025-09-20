@@ -1,0 +1,10 @@
+{
+  "name": "pipaas",
+  "private": true,
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "build": "echo build ok",
+    "test": "echo no tests && exit 0"
+  }
+}
